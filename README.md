@@ -85,11 +85,9 @@ Stretch Goals
    Because we have different professional skill, and it could test how the mobile developer cooperate with UI designer.<br />
    And if there is a simple api, it could test between mobile developer and backend developer as well.<br />
    In order to know how we can work collaborated with cross-functional groups perfectly. :)<br />
+   <br /><br /><br />
 
 
-
-   **Thank you for taking time to have a look at this and my code.**
-   
-   **Hope to hear from you soon. :)**
-   
-   **Aaron**
+   **Thank you for taking time to have a look at this and my code.**<br />
+   **Hope to hear from you soon. :)**<br />
+   **Aaron**<br />
