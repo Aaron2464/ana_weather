@@ -1,3 +1,4 @@
+import 'package:ana_weather/bloc/weather_bloc.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -5,7 +6,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -13,26 +13,27 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: ANAWeatherPage(title: 'ANA SIMPLE WEATHER APP'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
+class ANAWeatherPage extends StatefulWidget {
+  ANAWeatherPage({Key? key, required this.title}) : super(key: key);
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _ANAWeatherPageState createState() => _ANAWeatherPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _ANAWeatherPageState extends State<ANAWeatherPage> {
+  WeatherBloc _weatherBloc = WeatherBloc();
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+  @override
+  void initState() {
+    super.initState();
+    _weatherBloc.getCityWeather('Taipei');
+    _weatherBloc.getLocationWeather(25.0, 120.5319);
   }
 
   @override
@@ -44,22 +45,20 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
+          children: <Widget>[],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
+        onPressed: () {},
+        tooltip: 'Add City',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _weatherBloc.dispose();
   }
 }
