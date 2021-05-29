@@ -1,17 +1,46 @@
-import 'package:ana_weather/beans/location_bean/location_weather_bean.dart';
-import 'package:ana_weather/beans/weather_bean/weather_bean.dart';
-import 'package:ana_weather/bloc/weather_bloc.dart';
 import 'package:ana_weather/model/databse_helper.dart';
-import 'package:ana_weather/utilities/constants.dart';
+import 'package:ana_weather/screen/ana_weather.dart';
 import 'package:flutter/material.dart';
+import 'package:location/location.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await DatabaseHelper.instance.database;
-  runApp(MyApp());
+
+  LocationData? _locationData = await getLocation();
+  runApp(MyApp(locationData: _locationData));
+}
+
+Future<LocationData?> getLocation() async {
+  Location location = new Location();
+
+  bool? _serviceEnabled;
+  PermissionStatus? _permissionGranted;
+  LocationData? _locationData;
+  _serviceEnabled = await location.serviceEnabled();
+  if (!_serviceEnabled) {
+    _serviceEnabled = await location.requestService();
+    if (!_serviceEnabled) {
+      return null;
+    }
+  }
+
+  _permissionGranted = await location.hasPermission();
+  if (_permissionGranted == PermissionStatus.denied) {
+    _permissionGranted = await location.requestPermission();
+    if (_permissionGranted != PermissionStatus.granted) {
+      return null;
+    }
+  }
+
+  _locationData = await location.getLocation();
+  return _locationData;
 }
 
 class MyApp extends StatelessWidget {
+  MyApp({this.locationData});
+  final LocationData? locationData;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -19,170 +48,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: ANAWeatherPage(title: 'ANA SIMPLE WEATHER APP'),
-    );
-  }
-}
-
-class ANAWeatherPage extends StatefulWidget {
-  ANAWeatherPage({Key? key, required this.title}) : super(key: key);
-  final String title;
-
-  @override
-  _ANAWeatherPageState createState() => _ANAWeatherPageState();
-}
-
-class _ANAWeatherPageState extends State<ANAWeatherPage> {
-  WeatherBloc _weatherBloc = WeatherBloc();
-  TextEditingController textEditingController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    _weatherBloc.getLocationWeather(25.0, 120.5319);
-    _weatherBloc.getWeathers();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Container(
-        color: Colors.lightBlueAccent,
-        padding: EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            StreamBuilder(
-              stream: _weatherBloc.locationWeatherFetcher,
-              builder: (BuildContext context,
-                  AsyncSnapshot<LocationWeatherBean> snapshot) {
-                if (snapshot.hasData) {
-                  return Container(
-                    child: weatherRow(
-                        src:
-                            '$iconUrl/${snapshot.data!.list?[0].weather?[0].icon}@2x.png',
-                        city: snapshot.data!.list![0].name ?? '',
-                        temp: snapshot.data!.list![0].main!.temp!),
-                  );
-                }
-                return SizedBox();
-              },
-            ),
-            Expanded(
-              child: StreamBuilder(
-                stream: _weatherBloc.cityWeathersFetcher,
-                builder: (BuildContext context,
-                    AsyncSnapshot<List<WeatherBean>> snapshot) {
-                  if (snapshot.hasData)
-                    return Container(
-                      child: ListView.builder(
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Container(
-                            color: index % 2 == 0
-                                ? Colors.white60
-                                : Colors.transparent,
-                            child: weatherRow(
-                                src:
-                                    '$iconUrl/${snapshot.data![index].icon}@2x.png',
-                                city: snapshot.data![index].city ?? '',
-                                temp: snapshot.data![index].temp!),
-                          );
-                        },
-                      ),
-                    );
-                  return SizedBox();
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return Dialog(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                elevation: 0,
-                backgroundColor: Colors.transparent,
-                child: Container(
-                  padding:
-                      EdgeInsets.only(left: 20, top: 65, right: 20, bottom: 20),
-                  margin: EdgeInsets.only(top: 45),
-                  decoration: BoxDecoration(
-                    color: Colors.orangeAccent,
-                    shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(offset: Offset(0, 5), blurRadius: 10),
-                    ],
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text('Add city you\'d like to see'),
-                      TextField(controller: textEditingController),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              _weatherBloc
-                                  .getCityWeather(textEditingController.text);
-                              textEditingController.text = '';
-                              Navigator.of(context).pop();
-                            },
-                            child: Text('Add'),
-                          ),
-                          SizedBox(width: 8.0),
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text('Cancel'),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
-        },
-        tooltip: 'Add City',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _weatherBloc.dispose();
-  }
-
-  Widget weatherRow(
-      {required String src, required String city, required double temp}) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Image.network(src),
-        Text(
-          city,
-          style: TextStyle(fontSize: 24.0),
-          overflow: TextOverflow.ellipsis,
-        ),
-        Text('${(temp - 273.15).toStringAsFixed(1)} °C',
-            style: TextStyle(fontSize: 24.0)),
-      ],
+      home: ANAWeatherPage(
+          title: 'ANA SIMPLE WEATHER APP', locationData: locationData),
     );
   }
 }
