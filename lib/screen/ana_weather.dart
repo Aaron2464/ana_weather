@@ -123,7 +123,8 @@ class _ANAWeatherPageState extends State<ANAWeatherPage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('Add city you\'d like to see the weather',
+                      Text('Type in city \nYou\'d like to see the weather',
+                          textAlign: TextAlign.center,
                           style: TextStyle(
                               fontSize: 18.0, fontWeight: FontWeight.bold)),
                       TextField(
@@ -175,7 +176,12 @@ class _ANAWeatherPageState extends State<ANAWeatherPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Image.network(src),
+        FadeInImage.assetNetwork(
+          width: 100.0,
+          height: 100.0,
+          placeholder: 'assets/loading.gif',
+          image: src,
+        ),
         Text(
           city,
           style: TextStyle(fontSize: 24.0),

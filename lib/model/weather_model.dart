@@ -1,5 +1,5 @@
 import 'package:ana_weather/beans/weather_bean/weather_bean.dart';
-import 'package:ana_weather/model/databse_helper.dart';
+import 'package:ana_weather/helper/databse_helper.dart';
 import 'package:sqflite/sqflite.dart';
 
 class WeatherModel {

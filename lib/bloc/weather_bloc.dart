@@ -2,7 +2,7 @@ import 'package:ana_weather/beans/city_bean/city_weather_bean.dart';
 import 'package:ana_weather/beans/location_bean/location_weather_bean.dart';
 import 'package:ana_weather/beans/weather_bean/weather_bean.dart';
 import 'package:ana_weather/model/weather_model.dart';
-import 'package:ana_weather/network_helper/NetworkHelper.dart';
+import 'package:ana_weather/helper/network_helper.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rxdart/rxdart.dart';
 
