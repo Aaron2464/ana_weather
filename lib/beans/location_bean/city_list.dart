@@ -1,47 +1,15 @@
 import 'package:ana_weather/beans/global/clouds.dart';
 import 'package:ana_weather/beans/global/coord.dart';
-import 'package:ana_weather/beans/global/main.dart';
+import 'package:ana_weather/beans/global/main_wether.dart';
 import 'package:ana_weather/beans/global/sys.dart';
 import 'package:ana_weather/beans/global/weather.dart';
 import 'package:ana_weather/beans/global/wind.dart';
-
-class LocationWeatherBean {
-  String? message;
-  dynamic cod;
-  int? count;
-  List<CityList>? list;
-
-  LocationWeatherBean({this.message, this.cod, this.count, this.list});
-
-  LocationWeatherBean.fromJson(Map<String, dynamic> json) {
-    message = json['message'];
-    cod = json['cod'];
-    count = json['count'];
-    if (json['list'] != null) {
-      list = [];
-      json['list'].forEach((v) {
-        list!.add(new CityList.fromJson(v));
-      });
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['message'] = this.message;
-    data['cod'] = this.cod;
-    data['count'] = this.count;
-    if (this.list != null) {
-      data['list'] = this.list!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-}
 
 class CityList {
   int? id;
   String? name;
   Coord? coord;
-  Main? main;
+  MainWeather? main;
   int? dt;
   Wind? wind;
   Sys? sys;
@@ -67,7 +35,7 @@ class CityList {
     id = json['id'];
     name = json['name'];
     coord = json['coord'] != null ? new Coord.fromJson(json['coord']) : null;
-    main = json['main'] != null ? new Main.fromJson(json['main']) : null;
+    main = json['main'] != null ? new MainWeather.fromJson(json['main']) : null;
     dt = json['dt'];
     wind = json['wind'] != null ? new Wind.fromJson(json['wind']) : null;
     sys = json['sys'] != null ? new Sys.fromJson(json['sys']) : null;

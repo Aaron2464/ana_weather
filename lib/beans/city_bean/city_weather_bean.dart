@@ -1,6 +1,6 @@
 import 'package:ana_weather/beans/global/clouds.dart';
 import 'package:ana_weather/beans/global/coord.dart';
-import 'package:ana_weather/beans/global/main.dart';
+import 'package:ana_weather/beans/global/main_wether.dart';
 import 'package:ana_weather/beans/global/sys.dart';
 import 'package:ana_weather/beans/global/weather.dart';
 import 'package:ana_weather/beans/global/wind.dart';
@@ -9,7 +9,7 @@ class CityWeatherBean {
   Coord? coord;
   List<Weather>? weather;
   String? base;
-  Main? main;
+  MainWeather? main;
   int? visibility;
   Wind? wind;
   Clouds? clouds;
@@ -46,7 +46,7 @@ class CityWeatherBean {
       });
     }
     base = json['base'];
-    main = json['main'] != null ? new Main.fromJson(json['main']) : null;
+    main = json['main'] != null ? new MainWeather.fromJson(json['main']) : null;
     visibility = json['visibility'];
     wind = json['wind'] != null ? new Wind.fromJson(json['wind']) : null;
     clouds =

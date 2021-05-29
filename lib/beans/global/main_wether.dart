@@ -1,4 +1,4 @@
-class Main {
+class MainWeather {
   double? temp;
   double? feelsLike;
   double? tempMin;
@@ -6,7 +6,7 @@ class Main {
   int? pressure;
   int? humidity;
 
-  Main(
+  MainWeather(
       {this.temp,
       this.feelsLike,
       this.tempMin,
@@ -14,9 +14,9 @@ class Main {
       this.pressure,
       this.humidity});
 
-  Main.fromJson(Map<String, dynamic> json) {
+  MainWeather.fromJson(Map<String, dynamic> json) {
     temp = json['temp'];
-    feelsLike = json['feels_like'];
+    feelsLike = double.parse(json['feels_like'].toString());
     tempMin = json['temp_min'];
     tempMax = json['temp_max'];
     pressure = json['pressure'];
