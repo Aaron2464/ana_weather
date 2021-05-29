@@ -31,6 +31,7 @@ Stretch Goals
            string value: App needs access to location and direction when open. <br />
    3. The first item in screen_shot is current weather at current city.<br />
       If user don't provide location permission, the first item won't show up and list view will cove it.<br />
+   4. Make sure to secure the api key
 
 ## Date
    2021/05/29
@@ -75,6 +76,7 @@ Stretch Goals
    4. Update the current weather everyday.
    5. Showing more information about weather on UI.
    6. Search bar at the first page
+   7. Usually api key should get it from backend, then I can store in sharedpreference security by using flutter_secure_storage 
 
 ## Other information about your submission that you feel it's important that we know if applicable.
    I have been working remotely for one and half years, I am very good at time management.<br />
